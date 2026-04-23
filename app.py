@@ -13,20 +13,26 @@ url = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
 
 df = pd.read_csv(url, usecols=[2, 3, 4, 5, 6])
 df.columns = ["study_hours", "music", "genre", "grade", "course"]
-df = df.dropna()
+# ── Clean Data (FIX) ───────────────────────────────────────
 df["grade"] = pd.to_numeric(df["grade"], errors="coerce")
-
-st.subheader("📋 Raw Data")
-st.dataframe(df)
-st.write(f"Total responses: {df.shape[0]}")
+df = df.dropna()  # IMPORTANT: drop NaNs after conversion
 
 # ── ANOVA ──────────────────────────────────────────────────
 st.subheader("📊 One-Way ANOVA Result")
+
+# Extra safety: ensure genre is string
+df["genre"] = df["genre"].astype(str)
+
 model = ols('grade ~ C(genre)', data=df).fit()
 anova_table = sm.stats.anova_lm(model, typ=1)
+
 st.dataframe(anova_table)
 
-p_value = anova_table["PR(>F)"][0]
+# ✅ FIX: dynamically find p-value column
+p_col = [col for col in anova_table.columns if "PR" in col or "p" in col.lower()][0]
+p_value = anova_table[p_col].iloc[0]
+
+# ── Result ────────────────────────────────────────────────
 if p_value < 0.05:
     st.success(f"p-value = {p_value:.4f} → REJECT H0: Music type significantly affects grades.")
 else:
