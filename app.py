@@ -28,22 +28,22 @@ anova_table = sm.stats.anova_lm(model, typ=1)
 
 st.dataframe(anova_table)
 
-# ✅ FIX: dynamically find p-value column
+#FIX: dynamically find p-value column
 p_col = [col for col in anova_table.columns if "PR" in col or "p" in col.lower()][0]
 p_value = anova_table[p_col].iloc[0]
 
-# ── Result ────────────────────────────────────────────────
+# ── Result 
 if p_value < 0.05:
     st.success(f"p-value = {p_value:.4f} → REJECT H0: Music type significantly affects grades.")
 else:
     st.warning(f"p-value = {p_value:.4f} → FAIL TO REJECT H0: No significant effect found.")
 
-# ── Tukey HSD ──────────────────────────────────────────────
+# ── Tukey HSD
 st.subheader("🔍 Tukey HSD Post-Hoc Test")
 tukey = pairwise_tukeyhsd(df["grade"], groups=df["genre"])
 st.text(str(tukey._results_table))
 
-# ── Chart ──────────────────────────────────────────────────
+# ── Chart 
 st.subheader("📈 Average Grade by Music Type")
 fig, ax = plt.subplots()
 df.groupby("genre")["grade"].mean().plot(kind="bar", color="steelblue", edgecolor="black", ax=ax)
@@ -52,7 +52,7 @@ ax.set_ylabel("Average Grade (%)")
 ax.set_title("Average Grade by Music Genre")
 st.pyplot(fig)
 
-# Assuming you already calculated your p_value
+# Assuming calculated your p_value
 st.write(f"### P-value: {p_value:.4f}")
 
 # The Decision Logic
