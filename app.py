@@ -45,3 +45,16 @@ ax.set_xlabel("Music Type")
 ax.set_ylabel("Average Grade (%)")
 ax.set_title("Average Grade by Music Genre")
 st.pyplot(fig)
+
+# Assuming you already calculated your p_value
+st.write(f"### P-value: {p_value:.4f}")
+
+# The Decision Logic
+alpha = 0.05
+
+if p_value < alpha:
+    st.success("### Result: Reject the Null Hypothesis")
+    st.write("There is a **significant difference** in grades between the groups. Music appears to have an impact.")
+else:
+    st.error("### Result: Fail to Reject the Null Hypothesis")
+    st.write("There is **no significant difference** in grades. Any observed differences are likely due to random chance.")
