@@ -40,6 +40,7 @@ if p_value < 0.05:
     st.subheader("🔍 Tukey HSD Post-Hoc Test")
     tukey = pairwise_tukeyhsd(df["grade"], groups=df["genre"])
     st.text(str(tukey._results_table))
+    st.write("There is **no significant difference** in grades. Any observed differences are likely due to random chance.")
 
 
 else:
@@ -57,5 +58,3 @@ st.pyplot(fig)
 
 # Assuming calculated your p_value
 st.write(f"### P-value: {p_value:.4f}")
-
-    st.write("There is **no significant difference** in grades. Any observed differences are likely due to random chance.")
