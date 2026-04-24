@@ -57,3 +57,26 @@ ax.set_ylabel("Average Grade (%)")
 ax.set_title("Average Grade by Music Genre")
 st.pyplot(fig)
 
+# ── Three-Way ANOVA ───────────────────────────────────────
+st.subheader("📊 Three-Way ANOVA Result")
+
+# Ensure categorical data are strings and numeric data is float
+df["genre"] = df["genre"].astype(str)
+df["course"] = df["course"].astype(str)
+df["study_hours"] = pd.to_numeric(df["study_hours"], errors="coerce")
+df = df.dropna()
+
+# Formula: grade influenced by genre, course, and study_hours (including interactions)
+# Using 'C()' for categorical variables
+model = ols('grade ~ C(genre) * C(course) * study_hours', data=df).fit()
+anova_table = sm.stats.anova_lm(model, typ=2) # Type 2 is better for unbalanced multi-factor data
+
+st.dataframe(anova_table)
+
+# Displaying the p-values for the three main factors
+st.write("### Analysis of Main Effects:")
+factors = ["C(genre)", "C(course)", "study_hours"]
+for factor in factors:
+    p_val = anova_table.loc[factor, "PR(>F)"]
+    status = "✅ Significant" if p_val < 0.05 else "❌ Not Significant"
+    st.write(f"- **{factor}**: p = {p_val:.4f} ({status})")
