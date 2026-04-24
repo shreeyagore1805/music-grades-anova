@@ -56,5 +56,3 @@ ax.set_ylabel("Average Grade (%)")
 ax.set_title("Average Grade by Music Genre")
 st.pyplot(fig)
 
-# Assuming calculated your p_value
-st.write(f"### P-value: {p_value:.4f}")
